@@ -1,0 +1,5 @@
+rootProject.name = 'JT-Chat'
+include 'chat-client'
+include 'chat-server'
+include 'chat-transmission'
+

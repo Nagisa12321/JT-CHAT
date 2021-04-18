@@ -1,0 +1,27 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compile("org.springframework:spring-context:${springVersion}")
+    compile("org.springframework:spring-web:${springVersion}")
+    compile("org.aspectj:aspectjweaver:${aspectJVersion}")
+    compile("log4j:log4j:${log4jVersion}")
+    compile("junit:junit:${junitVersion}")
+    // https://mvnrepository.com/artifact/org.mybatis/mybatis
+    compile("org.mybatis:mybatis:${mybatisVersion}")
+
+    // https://mvnrepository.com/artifact/com.alibaba/druid
+    compile("com.alibaba:druid:${druidVersion}")
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2
+    compile("org.apache.commons:commons-dbcp2:${dbcpVersion}")
+
+    testCompile("org.mockito:mockito-core:${mockitoVersion}")
+    testCompile("org.springframework:spring-test:${springVersion}")
+}

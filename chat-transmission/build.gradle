@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = '1.8'
+jar.enabled = true
+
+group 'com.jtchen'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    // https://mvnrepository.com/artifact/com.alibaba/fastjson
+    implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.76'
+
+}
+
+test {
+    useJUnitPlatform()
+}
