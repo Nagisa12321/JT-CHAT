@@ -1,7 +1,8 @@
-package control;
+package control.group;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import control.IController;
 import domain.User;
 import org.apache.log4j.Logger;
 import util.JSONType;
@@ -10,8 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -19,19 +18,23 @@ import java.util.Map;
  * @version 1.0
  * @date 2021/4/15 18:21
  */
-public class ChatServer implements Runnable {
+public class ChatGroupServer implements Runnable {
 
-	private final int port;
+	private int port;
 	private final Logger logger;
-	private final IController controller;
-	private final Map<String, ChatServerSocket> serverSockets;
+	private IController controller;
 	private boolean isRunning;
 
-	public ChatServer(int port, Logger logger, IController controller) {
+	public ChatGroupServer(Logger logger) {
 		this.isRunning = true;
-		this.serverSockets = new HashMap<>();
-		this.port = port;
 		this.logger = logger;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	public void setController(IController controller) {
 		this.controller = controller;
 	}
 
@@ -39,19 +42,16 @@ public class ChatServer implements Runnable {
 	public void closeServer() {
 		isRunning = false;
 
-		logger.debug("[chat-server]: server is interrupted, will send to every one the server is over");
-		controller.removeAllUser();
-		serverSockets.values().forEach(ChatServerSocket::closeServerSocket);
 		logger.info("[chat-server]: chat-server exit");
 	}
 
 	// 关闭对某个用户的链接
-	public void closeSocketByName(String username) {
-		ChatServerSocket chatServerSocket = serverSockets.get(username);
-		chatServerSocket.closeServerSocket();
-
-		logger.info("[ChatServer]: user[" + username + "]'s chat-server-socket has been closed..");
-	}
+//	public void closeSocketByName(String username) {
+//		ChatGroupServerSocket chatGroupServerSocket = serverSockets.get(username);
+//		chatGroupServerSocket.closeServerSocket();
+//
+//		logger.info("[ChatGroupServer]: user[" + username + "]'s chat-server-socket has been closed..");
+//	}
 
 	@Override
 	public void run() {
@@ -74,18 +74,11 @@ public class ChatServer implements Runnable {
 				logger.info("[chat-server]: successfully read the inputStream, and the json is " + builder.toString());
 				JSONObject json = (JSONObject) JSON.parse(builder.toString());
 				int type = json.getInteger(JSONType.TYPE);
-				if (type == JSONType.TYPE_USER_INFORMATION) {
+				if (type == JSONType.TYPE_USER_ADD_GROUP) {
 					String username = json.getString(JSONType.USER_NAME);
-					// 检查用户信息是否合法
-					if (controller.checkUser(username, socket.getOutputStream())) {
-						User user = new User(username, socket);
-						controller.addUser(user);
+					String groupName = json.getString(JSONType.GROUP_NAME);
 
-						ChatServerSocket chatServerSocket = new ChatServerSocket(user, logger, controller);
-						Thread thread = new Thread(chatServerSocket);
-						thread.start();
-						serverSockets.put(username, chatServerSocket);
-					}
+					controller.userAddGroup(new User(username, socket), groupName, controller);
 				}
 			}
 		} catch (IOException e) {

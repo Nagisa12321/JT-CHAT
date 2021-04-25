@@ -1,9 +1,15 @@
 import config.ServerConfig;
 import control.IController;
-import model.IModel;
+import control.group.ChatGroupServer;
+import control.group.IGroupController;
+import control.main.ChatMainServer;
+import control.main.IMainController;
+import model.group.IGroupModel;
+import model.main.IMainModel;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import view.ServerGUI;
+import view.group.ServerGUI;
+import view.main.ServerMainGUI;
 
 /**
  * @author jtchen
@@ -13,12 +19,31 @@ import view.ServerGUI;
 public class ServerApp {
 	public static void main(String[] args) {
 		ApplicationContext context = new AnnotationConfigApplicationContext(ServerConfig.class);
-		IModel model = context.getBean(IModel.class);
+		/*--controller--*/
 		IController controller = context.getBean(IController.class);
-		ServerGUI view = context.getBean(ServerGUI.class);
-		view.setController(controller);
-		view.setModel(model);
+		/*-----------------------------group-----------------------------------*/
+		/*----------group mvc-------------*/
+		IGroupModel groupModel = context.getBean(IGroupModel.class);
+		IGroupController groupController = context.getBean(IGroupController.class);
+		ServerGUI serverGUI = context.getBean(ServerGUI.class);
+		serverGUI.setModel(groupModel);
+		serverGUI.setController(groupController);
 
-		view.open();
+		/*-----------------------------main-----------------------------------*/
+
+		/*----------main getter------------*/
+		ChatMainServer chatMainServer = context.getBean(ChatMainServer.class);
+		chatMainServer.setController(controller);
+		/*------------main mvc------------*/
+		IMainModel mainModel = context.getBean(IMainModel.class);
+		IMainController mainController = context.getBean(IMainController.class);
+		ServerMainGUI mainGUI = context.getBean(ServerMainGUI.class);
+		mainGUI.setMainController(mainController);
+		mainGUI.setModel(mainModel);
+		mainGUI.setController(controller);
+		mainController.setServer(chatMainServer);
+
+		/*--start--*/
+		controller.start();
 	}
 }

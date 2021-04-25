@@ -1,6 +1,6 @@
-package view;
+package view.group;
 
-import control.IController;
+import control.group.IGroupController;
 import domain.User;
 import org.apache.log4j.Logger;
 
@@ -18,11 +18,11 @@ public class UserInformationGUI extends JFrame {
 	public static final int DEFAULT_X_LOCATION = 500;
 	public static final int DEFAULT_Y_LOCATION = 100;
 
-	private IController controller;
+	private IGroupController controller;
 	private User user;
 	private Logger logger;
 
-	public UserInformationGUI(IController controller, User user, Logger logger) throws HeadlessException {
+	public UserInformationGUI(IGroupController controller, User user, Logger logger) throws HeadlessException {
 		this.controller = controller;
 		this.user = user;
 		this.logger = logger;
@@ -41,8 +41,8 @@ public class UserInformationGUI extends JFrame {
 		JLabel ip = new JLabel("ip:");
 		JLabel port = new JLabel("port");
 
-		JLabel userIP = new JLabel(user.getUserSocket().getInetAddress().toString());
-		JLabel userPort = new JLabel(String.valueOf(user.getUserSocket().getPort()));
+		JLabel userIP = new JLabel(user.getSocket().getInetAddress().toString());
+		JLabel userPort = new JLabel(String.valueOf(user.getSocket().getPort()));
 
 		jPanel.add(ip);
 		jPanel.add(userIP);

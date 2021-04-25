@@ -7,4 +7,8 @@ package view;
  */
 public interface IView {
 	void openMessage(String message);
+
+	void open();
+
+	void close();
 }

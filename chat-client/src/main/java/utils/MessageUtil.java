@@ -10,7 +10,7 @@ import java.io.OutputStreamWriter;
  * @date 2021/4/18 10:02
  */
 public class MessageUtil {
-	public static void sendJSON(String json, OutputStream os) throws IOException {
+	public synchronized static void sendJSON(String json, OutputStream os) throws IOException {
 		OutputStreamWriter writer = new OutputStreamWriter(os);
 		writer.write(json);
 		writer.flush();

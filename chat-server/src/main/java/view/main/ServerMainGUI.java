@@ -1,30 +1,32 @@
-package view;
+package view.main;
 
 import control.IController;
-import domain.User;
-import model.IModel;
+import control.main.IMainController;
+import model.main.IMainModel;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
+import java.util.Collection;
 
 /**
  * @author jtchen
  * @version 1.0
- * @date 2021/4/15 17:26
+ * @date 2021/4/19 13:24
  */
-public class ServerGUI extends JFrame implements IView {
+public class ServerMainGUI extends JFrame implements IMainView {
+
 
 	public static final int DEFAULT_WEIGTH = 400;
 	public static final int DEFAULT_HEIGHT = 300;
 	public static final int DEFAULT_X_LOCATION = 500;
 	public static final int DEFAULT_Y_LOCATION = 100;
 	private final Logger logger;
-	private IModel model;
+	private IMainModel model;
+	private IMainController mainController;
 	private IController controller;
 
-	// 在线人员
+	// 当前群组
 	private JList<String> list;
 	// 端口号
 	private JTextField port;
@@ -33,11 +35,12 @@ public class ServerGUI extends JFrame implements IView {
 	// 关闭服务器
 	private JButton closeServer;
 	// 用户详细信息
-	private JButton userInformation;
-	// 踢出用户
-	private JButton kickUser;
+	private JButton groupInformation;
+	// 添加群组
+	private JButton addGroup;
 
-	public ServerGUI(Logger logger) throws HeadlessException {
+
+	public ServerMainGUI(Logger logger) throws HeadlessException {
 		this.logger = logger;
 		defaultSetting();
 		addServerPanel();
@@ -79,72 +82,92 @@ public class ServerGUI extends JFrame implements IView {
 
 	private void addServerPanel() {
 		JPanel listPanel = new JPanel();
-		JPanel settingPanel = new JPanel();
-		listPanel.setPreferredSize(new Dimension(DEFAULT_WEIGTH / 2, DEFAULT_HEIGHT));
-		settingPanel.setPreferredSize(new Dimension(DEFAULT_WEIGTH / 2, DEFAULT_HEIGHT));
+		JPanel settingPanel = new JPanel(new GridLayout(5, 1));
+		listPanel.setPreferredSize(new Dimension((int) (DEFAULT_WEIGTH / 2.2), DEFAULT_HEIGHT));
+		settingPanel.setPreferredSize(new Dimension((int) (DEFAULT_WEIGTH / 2.2), DEFAULT_HEIGHT));
+		settingPanel.setBorder(BorderFactory.createTitledBorder("setting"));
+		listPanel.setBorder(BorderFactory.createTitledBorder("groups"));
 
 		list = new JList<>();
-		list.setPreferredSize(new Dimension(DEFAULT_WEIGTH / 2, DEFAULT_HEIGHT));
+		list.setPreferredSize(new Dimension((int) (DEFAULT_WEIGTH / 2.5), (int) (DEFAULT_HEIGHT * 0.75)));
 
 		port = new JTextField();
 		port.setPreferredSize(new Dimension(120, 30));
+		port.setBorder(BorderFactory.createTitledBorder("port"));
 		openServer = new JButton("open server");
 		closeServer = new JButton("close server");
-		kickUser = new JButton("kick this user");
-		userInformation = new JButton("user information");
+		groupInformation = new JButton("group information");
+		addGroup = new JButton("add a group");
 
-		listPanel.add(new JLabel("user list"));
 		listPanel.add(list);
-		settingPanel.add(new JLabel("port: "));
 		settingPanel.add(port);
 		settingPanel.add(openServer);
 		settingPanel.add(closeServer);
-		settingPanel.add(kickUser);
-		settingPanel.add(userInformation);
+		settingPanel.add(groupInformation);
+		settingPanel.add(addGroup);
 
 		add(listPanel, BorderLayout.WEST);
 		add(settingPanel, BorderLayout.EAST);
 	}
 
 	private void addListener() {
-		openServer.addActionListener(e -> controller.openServer());
-
-		closeServer.addActionListener(e -> controller.closeServer());
-
-		kickUser.addActionListener(e -> {
-			String username = list.getSelectedValue();
-			if (username != null)
-				controller.kickUserByName(username);
+		openServer.addActionListener(e -> {
+			mainController.openServer();
 		});
 
-		userInformation.addActionListener(e -> {
-			String username = list.getSelectedValue();
-			if (username != null)
-				controller.getUserInformation(username);
+		closeServer.addActionListener(e -> {
+			mainController.closeServer();
 		});
+
+		groupInformation.addActionListener(e -> {
+			String groupName = list.getSelectedValue();
+			if (groupName != null)
+				controller.groupInformation(groupName);
+		});
+
+		addGroup.addActionListener(e -> {
+			mainController.addGroup(controller);
+		});
+
+
 	}
 
+	@Override
 	public JTextField getPort() {
 		return port;
 	}
 
+	@Override
 	public JButton getOpenServer() {
 		return openServer;
 	}
 
+	@Override
 	public JButton getCloseServer() {
 		return closeServer;
 	}
 
 	@Override
-	public void update() {
-		Map<String, User> users = model.getUsers();
-		list.setListData(users.keySet().toArray(new String[0]));
+	public JButton getAddGroup() { return addGroup; }
+
+	@Override
+	public JButton getGroupInformation() {
+		return groupInformation;
 	}
 
-	public void setModel(IModel model) {
+	@Override
+	public void update() {
+		Collection<String> allGroups = model.getAllGroups();
+		list.setListData(allGroups.toArray(new String[]{}));
+	}
+
+	public void setModel(IMainModel model) {
 		this.model = model;
 		model.rigisterObserver(this);
+	}
+
+	public void setMainController(IMainController mainController) {
+		this.mainController = mainController;
 	}
 
 	public void setController(IController controller) {

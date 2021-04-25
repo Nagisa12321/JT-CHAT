@@ -21,6 +21,4 @@ public interface ILoginView extends IView {
 
 	void connectSuccess();
 
-	void open();
-
 }

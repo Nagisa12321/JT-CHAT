@@ -1,19 +1,19 @@
 package config;
 
-import control.IController;
-import model.IModel;
+import control.group.IGroupController;
+import model.group.IGroupModel;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import view.ServerGUI;
+import view.group.ServerGUI;
 
 public class ServerConfigTest {
 
 	@Test
 	public void testGetMVC() {
 		ApplicationContext context = new AnnotationConfigApplicationContext(ServerConfig.class);
-		IModel model = context.getBean(IModel.class);
-		IController controller = context.getBean(IController.class);
+		IGroupModel model = context.getBean(IGroupModel.class);
+		IGroupController controller = context.getBean(IGroupController.class);
 		ServerGUI view = context.getBean(ServerGUI.class);
 		view.setController(controller);
 		view.setModel(model);

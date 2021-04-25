@@ -1,7 +1,8 @@
-package control;
+package control.group;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import control.IController;
 import domain.User;
 import org.apache.log4j.Logger;
 import util.JSONParser;
@@ -15,15 +16,20 @@ import java.net.Socket;
  * @version 1.0
  * @date 2021/4/15 18:40
  */
-public class ChatServerSocket implements Runnable {
+public class ChatGroupServerSocket implements Runnable {
 
 	private IController controller;
+	private String groupName;
 	private User user;
 	private Logger logger;
 	private boolean isRunning;
 
+	public User getUser() {
+		return user;
+	}
 
-	public ChatServerSocket(User user, Logger logger, IController controller) {
+	public ChatGroupServerSocket(String groupName, User user, Logger logger, IController controller) {
+		this.groupName = groupName;
 		this.isRunning = true;
 		this.user = user;
 		this.logger = logger;
@@ -33,12 +39,12 @@ public class ChatServerSocket implements Runnable {
 	public void closeServerSocket() {
 		isRunning = false;
 
-		logger.info("[chat-server-socket]: [" + user.getUsername() + "] chat-server exit");
+		logger.info("[chat-group-server-socket]: [" + user.getUsername() + "] chat-server exit");
 	}
 
 	@Override
 	public void run() {
-		Socket userSocket = user.getUserSocket();
+		Socket userSocket = user.getSocket();
 		try {
 			InputStream is = userSocket.getInputStream();
 			while (isRunning) {
@@ -50,21 +56,21 @@ public class ChatServerSocket implements Runnable {
 					if (data == '}') break;
 				}
 
-				logger.info("[chat-server-socket]: successfully read the inputStream, and the json is " + builder.toString());
+				logger.info("[chat-group-server-socket]: successfully read the inputStream, and the json is " + builder.toString());
 				JSONObject json = (JSONObject) JSON.parse(builder.toString());
 				int type = json.getInteger(JSONType.TYPE);
 				if (type == JSONType.TYPE_MESSAGE) {
 					String message = (String) json.get(JSONType.MESSAGE);
 					String username = user.getUsername();
 					String jsonString = JSONParser.createMessageJSONString(username, message);
-					controller.sendToEveryOne(jsonString);
+					controller.sendToEveryOne(groupName, jsonString);
 				} else if (type == JSONType.TYPE_LEAVE) {
 					controller.removeUserByName(user.getUsername());
 				}
 			}
 
 		} catch (Exception e) {
-			logger.error("[chat-server-socket]: catch Exception: " + e + ", will remove the user in model");
+			logger.error("[chat-group-server-socket]: catch Exception: " + e + ", will remove the user in model");
 
 			controller.removeUserByName(user.getUsername());
 		}

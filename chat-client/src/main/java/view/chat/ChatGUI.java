@@ -37,7 +37,10 @@ public class ChatGUI extends JFrame implements IChatView {
 	// 消息框
 	private JTextArea messageArea;
 
-	public ChatGUI(Logger logger) throws HeadlessException {
+	private final String groupName;
+
+	public ChatGUI(Logger logger, String groupName) throws HeadlessException {
+		this.groupName = groupName;
 		this.logger = logger;
 		defaultSetting();
 		addChatPanel();
@@ -65,6 +68,11 @@ public class ChatGUI extends JFrame implements IChatView {
 		return messageArea;
 	}
 
+	@Override
+	public String getGroupName() {
+		return groupName;
+	}
+
 
 	@Override
 	public void openMessage(String message) {
@@ -72,14 +80,15 @@ public class ChatGUI extends JFrame implements IChatView {
 	}
 
 
-	@Override
-	public void closeConnect() {
-		setVisible(false);
-	}
 
 	@Override
 	public void open() {
 		setVisible(true);
+	}
+
+	@Override
+	public void close() {
+		setVisible(false);
 	}
 
 	private void addListener() {
@@ -132,7 +141,7 @@ public class ChatGUI extends JFrame implements IChatView {
 		setIconImage(imageIcon.getImage());
 
 		// 设置标题
-		setTitle("--JT-CHAT-Client--                - by jtchen");
+		setTitle(groupName);
 		// 设置方位
 		setLocation(DEFAULT_X_LOCATION, DEFAULT_Y_LOCATION);
 		// 设置不可变大小
@@ -155,7 +164,7 @@ public class ChatGUI extends JFrame implements IChatView {
 	@Override
 	public void update() {
 		logger.info("[view]: get the message from model");
-		List<Conversation> conversation = model.getConversation();
+		List<Conversation> conversation = model.getConversation(groupName);
 		paintConversation(conversation);
 	}
 

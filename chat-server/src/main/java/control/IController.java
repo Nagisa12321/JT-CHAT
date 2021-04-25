@@ -2,32 +2,30 @@ package control;
 
 import domain.User;
 
-import java.io.OutputStream;
-
 /**
  * @author jtchen
  * @version 1.0
- * @date 2021/4/15 17:17
+ * @date 2021/4/20 11:49
  */
 public interface IController {
 
-	void openServer();
-
-	void closeServer();
-
-	void addUser(User user);
-
-	void sendToEveryOne(String json);
-
-	void sendToUserByName(String json, String username);
+	void getGroupNameList(User user);
 
 	void removeUserByName(String username);
 
-	void removeAllUser();
+	void closeAllGroupSockets();
 
-	void kickUserByName(String username);
+	void checkUser(User user, IController controller);
 
-	void getUserInformation(String username);
+	void userAddGroup(User user, String groupName, IController controller);
 
-	boolean checkUser(String username, OutputStream os);
+	void userAskGroup(User user, String groupName, IController controller);
+
+	void sendToEveryOne(String groupName, String json) ;
+
+	void start();
+
+	void groupInformation(String groupName);
+
+	void addGroupGUISummit();
 }

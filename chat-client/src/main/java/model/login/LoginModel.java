@@ -14,7 +14,6 @@ public class LoginModel implements ILoginModel{
 	private User user;
 
 
-
 	public LoginModel(Logger logger) {
 		this.logger = logger;
 	}

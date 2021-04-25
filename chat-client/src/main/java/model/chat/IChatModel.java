@@ -1,9 +1,12 @@
 package model.chat;
 
+import control.GroupMessageGetter;
 import domain.Conversation;
+import domain.Group;
 import domain.User;
 import observer.Observerable;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,26 +20,42 @@ public interface IChatModel extends Observerable {
 	/**
 	 * 是否已经连接上服务器
 	 */
-	boolean isConnected();
+	boolean isConnected(String groupName);
 
 	/**
 	 * 设置是否连接上服务器
 	 */
-	void setConnected(boolean connected);
+	void setConnected(String groupName, boolean connected);
 
 	/**
 	 * 获取聊天记录
 	 */
-	List<Conversation> getConversation();
+	List<Conversation> getConversation(String groupName);
 
 	/**
 	 * 设置聊天记录
 	 */
-	void addConversation(Conversation conversation);
+	void addConversation(String groupName, Conversation conversation);
 
-	void addConversation(List<Conversation> conversations);
+	void addConversation(String groupName, List<Conversation> conversations);
 
 	User getUser();
 
 	void setUser(User user);
+
+	void addGroup(Group group);
+
+	Group getGroup(String groupName);
+
+	Collection<GroupMessageGetter> getAllGroupGetters();
+
+	Collection<Group> getAllGroups();
+
+	GroupMessageGetter getGroupMessageGetter(String groupName);
+
+	void removeGroupMessageGetter(String groupName);
+
+	void removeAllGroupMessageGetter();
+
+	void addGroupMessageGetter(String groupName, GroupMessageGetter groupMessageGetter);
 }

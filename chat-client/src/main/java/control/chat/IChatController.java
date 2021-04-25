@@ -1,5 +1,6 @@
 package control.chat;
 
+import control.IController;
 import domain.Conversation;
 import domain.User;
 
@@ -12,6 +13,8 @@ public interface IChatController {
 
 	void send();
 
+	void setUser(User user);
+
 	void serverClosed();
 
 	void addConversation(Conversation conversation);
@@ -22,4 +25,7 @@ public interface IChatController {
 
 	void connectSuccess();
 
+	void newGUI(String groupName, IController controller);
+
+	void joinTheGroup(String groupName, int port, IController controller);
 }

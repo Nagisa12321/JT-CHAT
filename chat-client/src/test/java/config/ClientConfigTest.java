@@ -22,4 +22,5 @@ public class ClientConfigTest {
 		System.out.println(controller);
 		System.out.println(view);
 	}
+
 }

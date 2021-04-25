@@ -1,8 +1,10 @@
 package util;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import static util.JSONType.*;
 
@@ -74,6 +76,42 @@ public class JSONParser {
 		JSONObject json = new JSONObject();
 		json.put(TYPE, TYPE_CHECK_USERS);
 		json.put(EXIST, exist);
+
+		return json.toJSONString();
+	}
+
+	public static String createGetGroupNameListJSONString() {
+		JSONObject json = new JSONObject();
+		json.put(TYPE, TYPE_GET_GROUP_NAMELIST);
+		return json.toJSONString();
+	}
+
+	public static String createGetGroupNameListJSONString(List<String> nameList, String ip, String port) {
+		JSONObject json = new JSONObject();
+		json.put(TYPE, TYPE_GET_GROUP_NAMELIST);
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.addAll(nameList);
+		json.put(NAME_LIST, jsonArray);
+		json.put(IP, ip);
+		json.put(PORT, port);
+
+		return json.toJSONString();
+	}
+
+	public static String createUserAddGroupJSONString(String groupName, String userName) {
+		JSONObject json = new JSONObject();
+		json.put(TYPE, TYPE_USER_ADD_GROUP);
+		json.put(USER_NAME, userName);
+		json.put(GROUP_NAME, groupName);
+
+		return json.toJSONString();
+	}
+
+	public static String createReplyGroupPort(int port, String groupName) {
+		JSONObject json = new JSONObject();
+		json.put(TYPE, TYPE_GROUP_PORT);
+		json.put(PORT, port);
+		json.put(GROUP_NAME, groupName);
 
 		return json.toJSONString();
 	}

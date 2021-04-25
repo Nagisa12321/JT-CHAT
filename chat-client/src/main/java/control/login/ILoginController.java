@@ -1,6 +1,7 @@
 package control.login;
 
 import domain.Conversation;
+import domain.User;
 
 /**
  * @author jtchen
@@ -11,7 +12,7 @@ public interface ILoginController {
 
 	void connect();
 
-	void connectSuccess();
+	User connectSuccess();
 
 	void connectFailed();
 

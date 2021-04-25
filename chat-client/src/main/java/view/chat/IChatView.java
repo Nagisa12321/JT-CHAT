@@ -21,7 +21,5 @@ public interface IChatView extends Observer, IView {
 
 	JTextArea getMessageArea();
 
-	void open();
-
-	void closeConnect();
+	String getGroupName();
 }

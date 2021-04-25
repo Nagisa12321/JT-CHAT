@@ -1,5 +1,6 @@
 package view.main;
 
+import observer.Observer;
 import view.IView;
 
 /**
@@ -7,5 +8,8 @@ import view.IView;
  * @version 1.0
  * @date 2021/4/18 21:20
  */
-public interface IMainView extends IView {
+public interface IMainView extends IView, Observer {
+
+	String getChooseGroupName();
+
 }

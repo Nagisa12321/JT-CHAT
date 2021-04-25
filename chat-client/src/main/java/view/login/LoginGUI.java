@@ -54,6 +54,11 @@ public class LoginGUI extends JFrame implements ILoginView{
 		setVisible(true);
 	}
 
+	@Override
+	public void close() {
+		setVisible(false);
+	}
+
 	// 默认设置
 	private void defaultSetting() {
 

@@ -13,6 +13,9 @@ public class JSONType {
 	public static final int TYPE_LEAVE = 4;
 	public static final int TYPE_KICK = 5;
 	public static final int TYPE_CHECK_USERS = 6;
+	public static final int TYPE_GET_GROUP_NAMELIST = 7;
+	public static final int TYPE_USER_ADD_GROUP = 8;
+	public static final int TYPE_GROUP_PORT = 9;
 
 
 	public static final String USER_NAME = "username";
@@ -21,5 +24,9 @@ public class JSONType {
 	public static final String TIME = "time";
 	public static final String VALUE = "value";
 	public static final String EXIST = "exist";
+	public static final String NAME_LIST = "name-list";
+	public static final String IP = "ip";
+	public static final String PORT = "port";
+	public static final String GROUP_NAME = "groupName";
 
 }

@@ -61,11 +61,14 @@ public class LoginController implements ILoginController {
 	}
 
 	@Override
-	public void connectSuccess() {
+	public User connectSuccess() {
 		logger.info("[controller]: connect success.");
-		model.setUser(new User(view.getUsername().getText(), socket));
+		User user = new User(view.getUsername().getText(), socket);
+		model.setUser(user);
 		view.openMessage("connect success.");
 		view.connectSuccess();
+
+		return user;
 	}
 
 	@Override
